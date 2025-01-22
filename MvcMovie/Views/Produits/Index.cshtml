@@ -1,0 +1,39 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<MvcMovie.Models.Produit>
+
+@{
+    ViewData["Title"] = "Liste des Produits";
+}
+
+<h1>Liste des Produits</h1>
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-primary">Ajouter un Produit</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nom</th>
+            <th>Prix</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var produit in Model)
+        {
+            <tr>
+                <td>@produit.Id</td>
+                <td>@produit.Nom</td>
+                <td>@produit.Prix</td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = produit.Id })" class="btn btn-warning">Edit</a>
+                    <a href="@Url.Action("Delete", new { id = produit.Id })" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
