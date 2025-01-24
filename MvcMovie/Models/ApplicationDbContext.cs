@@ -15,10 +15,8 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Test>().ToTable("TESTS");
-        base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<Produit>().ToTable("produit");
-        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Produit>().ToTable("PRODUIT").Property(p => p.Prix).HasColumnName("PRIX"); ;
     }
 }

@@ -16,42 +16,20 @@ namespace MvcMovie.Controllers
         }
 
 
+        // GET: Produits
+
+        public IActionResult Index()
+        {
+            var produits = _context.Produits.ToList(); // Assuming _context is your database context
+            return View(produits);
+        }
+
+
         private static List<Produit> _produits = new List<Produit>
         {
             new Produit { Id = 1, Nom = "Produit 1", Prix = 10.0m },
             new Produit { Id = 2, Nom = "Produit 2", Prix = 20.0m }
         };
-
-        // GET: Produits
-        public IActionResult Index()
-        {
-            try
-            {
-                // Test si la base est accessible
-                bool canConnect = _context.Database.CanConnect();
-
-                // Essaie de créer la table si elle n'existe pas
-                _context.Database.EnsureCreated();
-
-                // Essaie d'ajouter une entrée de test
-                var testEntry = new Produit { Id = 1, Nom = "Produit 1", Prix = 10.0m };
-                _context.Produits.Add(testEntry);
-                _context.SaveChanges();
-
-                // Récupère toutes les entrées
-                var produits = _context.Produits.ToList();
-
-                //ViewBag.ConnectionStatus = "Connexion réussie! Nombre d'entrées: " + allTests.Count;
-                return View(produits);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Erreur lors du test de connexion");
-                ViewBag.ConnectionStatus = "Erreur de connexion: " + ex.Message;
-                return View();
-            }
-            //return View(_produits);
-        }
 
         // GET: Produits/Details/5
         public IActionResult Details(int id)
@@ -75,13 +53,14 @@ namespace MvcMovie.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Id,Nom,Prix")] Produit produit)
         {
-            if (ModelState.IsValid)
-            {
-                produit.Id = _produits.Max(p => p.Id) + 1;
-                _produits.Add(produit);
+            //if (ModelState.IsValid)
+            //{
+                //produit.Id = _produits.Max(p => p.Id) + 1;
+                _context.Produits.Add(produit);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
-            }
-            return View(produit);
+            //}
+            //return View(produit);
         }
 
         // GET: Produits/Edit/5
