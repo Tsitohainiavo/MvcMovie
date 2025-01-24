@@ -53,20 +53,15 @@ namespace MvcMovie.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Id,Nom,Prix")] Produit produit)
         {
-            //if (ModelState.IsValid)
-            //{
-                //produit.Id = _produits.Max(p => p.Id) + 1;
                 _context.Produits.Add(produit);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
-            //}
-            //return View(produit);
         }
 
         // GET: Produits/Edit/5
         public IActionResult Edit(int id)
         {
-            var produit = _produits.FirstOrDefault(p => p.Id == id);
+            var produit = _context.Produits.Find(id);
             if (produit == null)
             {
                 return NotFound();
@@ -86,15 +81,30 @@ namespace MvcMovie.Controllers
 
             if (ModelState.IsValid)
             {
-                var existingProduit = _produits.FirstOrDefault(p => p.Id == id);
-                if (existingProduit != null)
+                try
                 {
-                    existingProduit.Nom = produit.Nom;
-                    existingProduit.Prix = produit.Prix;
+                    _context.Update(produit);
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProduitExists(produit.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(produit);
+        }
+
+        private bool ProduitExists(int id)
+        {
+            return _context.Produits.Any(e => e.Id == id);
         }
 
         // GET: Produits/Delete/5
