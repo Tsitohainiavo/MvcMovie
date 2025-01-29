@@ -110,7 +110,7 @@ namespace MvcMovie.Controllers
         // GET: Produits/Delete/5
         public IActionResult Delete(int id)
         {
-            var produit = _produits.FirstOrDefault(p => p.Id == id);
+            var produit = _context.Produits.Find(id);
             if (produit == null)
             {
                 return NotFound();
@@ -123,10 +123,11 @@ namespace MvcMovie.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            var produit = _produits.FirstOrDefault(p => p.Id == id);
+            var produit = _context.Produits.Find(id);
             if (produit != null)
             {
-                _produits.Remove(produit);
+                _context.Produits.Remove(produit);
+                _context.SaveChanges();
             }
             return RedirectToAction(nameof(Index));
         }
